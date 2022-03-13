@@ -8,10 +8,30 @@
     ".NETCoreApp,Version=v6.0": {
       "PollyDemo.Todo/1.0.0": {
         "dependencies": {
+          "Ardalis.GuardClauses": "4.0.0",
           "Swashbuckle.AspNetCore": "6.2.3"
         },
         "runtime": {
           "PollyDemo.Todo.dll": {}
+        }
+      },
+      "Ardalis.GuardClauses/4.0.0": {
+        "dependencies": {
+          "JetBrains.Annotations": "2021.2.0"
+        },
+        "runtime": {
+          "lib/net6.0/Ardalis.GuardClauses.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.0.0.0"
+          }
+        }
+      },
+      "JetBrains.Annotations/2021.2.0": {
+        "runtime": {
+          "lib/netstandard2.0/JetBrains.Annotations.dll": {
+            "assemblyVersion": "2021.2.0.0",
+            "fileVersion": "2021.2.0.0"
+          }
         }
       },
       "Microsoft.Extensions.ApiDescription.Server/3.0.0": {},
@@ -68,6 +88,20 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Ardalis.GuardClauses/4.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ejYmLzXNEVPlWTQUxyGAWt2uvBqVOPaVkBPgMn7FR9y5ekG5NyalSPxop7rHq1ohAyDGiCS3FUYhK0zSm/du0A==",
+      "path": "ardalis.guardclauses/4.0.0",
+      "hashPath": "ardalis.guardclauses.4.0.0.nupkg.sha512"
+    },
+    "JetBrains.Annotations/2021.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-kKSyoVfndMriKHLfYGmr0uzQuI4jcc3TKGyww7buJFCYeHb/X0kodYBPL7n9454q7v6ASiRmDgpPGaDGerg/Hg==",
+      "path": "jetbrains.annotations/2021.2.0",
+      "hashPath": "jetbrains.annotations.2021.2.0.nupkg.sha512"
     },
     "Microsoft.Extensions.ApiDescription.Server/3.0.0": {
       "type": "package",

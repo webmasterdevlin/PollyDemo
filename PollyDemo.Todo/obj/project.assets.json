@@ -2,6 +2,27 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "Ardalis.GuardClauses/4.0.0": {
+        "type": "package",
+        "dependencies": {
+          "JetBrains.Annotations": "2021.2.0"
+        },
+        "compile": {
+          "lib/net6.0/Ardalis.GuardClauses.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/Ardalis.GuardClauses.dll": {}
+        }
+      },
+      "JetBrains.Annotations/2021.2.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/JetBrains.Annotations.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/JetBrains.Annotations.dll": {}
+        }
+      },
       "Microsoft.Extensions.ApiDescription.Server/3.0.0": {
         "type": "package",
         "build": {
@@ -76,6 +97,49 @@
     }
   },
   "libraries": {
+    "Ardalis.GuardClauses/4.0.0": {
+      "sha512": "ejYmLzXNEVPlWTQUxyGAWt2uvBqVOPaVkBPgMn7FR9y5ekG5NyalSPxop7rHq1ohAyDGiCS3FUYhK0zSm/du0A==",
+      "type": "package",
+      "path": "ardalis.guardclauses/4.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "ardalis.guardclauses.4.0.0.nupkg.sha512",
+        "ardalis.guardclauses.nuspec",
+        "icon.png",
+        "lib/net451/Ardalis.GuardClauses.dll",
+        "lib/net451/Ardalis.GuardClauses.pdb",
+        "lib/net451/Ardalis.GuardClauses.xml",
+        "lib/net6.0/Ardalis.GuardClauses.dll",
+        "lib/net6.0/Ardalis.GuardClauses.pdb",
+        "lib/net6.0/Ardalis.GuardClauses.xml",
+        "lib/netstandard2.0/Ardalis.GuardClauses.dll",
+        "lib/netstandard2.0/Ardalis.GuardClauses.pdb",
+        "lib/netstandard2.0/Ardalis.GuardClauses.xml"
+      ]
+    },
+    "JetBrains.Annotations/2021.2.0": {
+      "sha512": "kKSyoVfndMriKHLfYGmr0uzQuI4jcc3TKGyww7buJFCYeHb/X0kodYBPL7n9454q7v6ASiRmDgpPGaDGerg/Hg==",
+      "type": "package",
+      "path": "jetbrains.annotations/2021.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "jetbrains.annotations.2021.2.0.nupkg.sha512",
+        "jetbrains.annotations.nuspec",
+        "lib/net20/JetBrains.Annotations.dll",
+        "lib/net20/JetBrains.Annotations.xml",
+        "lib/netstandard1.0/JetBrains.Annotations.deps.json",
+        "lib/netstandard1.0/JetBrains.Annotations.dll",
+        "lib/netstandard1.0/JetBrains.Annotations.xml",
+        "lib/netstandard2.0/JetBrains.Annotations.deps.json",
+        "lib/netstandard2.0/JetBrains.Annotations.dll",
+        "lib/netstandard2.0/JetBrains.Annotations.xml",
+        "lib/portable40-net40+sl5+win8+wp8+wpa81/JetBrains.Annotations.dll",
+        "lib/portable40-net40+sl5+win8+wp8+wpa81/JetBrains.Annotations.xml"
+      ]
+    },
     "Microsoft.Extensions.ApiDescription.Server/3.0.0": {
       "sha512": "LH4OE/76F6sOCslif7+Xh3fS/wUUrE5ryeXAMcoCnuwOQGT5Smw0p57IgDh/pHgHaGz/e+AmEQb7pRgb++wt0w==",
       "type": "package",
@@ -204,6 +268,7 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "Ardalis.GuardClauses >= 4.0.0",
       "Swashbuckle.AspNetCore >= 6.2.3"
     ]
   },
@@ -245,6 +310,10 @@
       "net6.0": {
         "targetAlias": "net6.0",
         "dependencies": {
+          "Ardalis.GuardClauses": {
+            "target": "Package",
+            "version": "[4.0.0, )"
+          },
           "Swashbuckle.AspNetCore": {
             "target": "Package",
             "version": "[6.2.3, )"

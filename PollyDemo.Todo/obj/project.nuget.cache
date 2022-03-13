@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "TE4O1eNoBCPhNK+FoRd4cEwQ/4eTJ5vY+YJjoLBwGiiXiouWnKIXp3p6OxOagilAKXN3ZKtNNi7Whot+atHDGA==",
+  "dgSpecHash": "CqEcrgvK+FFanSQB86MZFTDbR1bClK1zDfwxRL7vpnfr9Nz6FkM+M5+Pbe44Hcq18w64g+jaA+a60afGYttugA==",
   "success": true,
   "projectFilePath": "/Users/inmetadeveloper/Downloads/PollyDemo/PollyDemo.Todo/PollyDemo.Todo.csproj",
   "expectedPackageFiles": [
+    "/Users/inmetadeveloper/.nuget/packages/ardalis.guardclauses/4.0.0/ardalis.guardclauses.4.0.0.nupkg.sha512",
+    "/Users/inmetadeveloper/.nuget/packages/jetbrains.annotations/2021.2.0/jetbrains.annotations.2021.2.0.nupkg.sha512",
     "/Users/inmetadeveloper/.nuget/packages/microsoft.extensions.apidescription.server/3.0.0/microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
     "/Users/inmetadeveloper/.nuget/packages/microsoft.openapi/1.2.3/microsoft.openapi.1.2.3.nupkg.sha512",
     "/Users/inmetadeveloper/.nuget/packages/swashbuckle.aspnetcore/6.2.3/swashbuckle.aspnetcore.6.2.3.nupkg.sha512",

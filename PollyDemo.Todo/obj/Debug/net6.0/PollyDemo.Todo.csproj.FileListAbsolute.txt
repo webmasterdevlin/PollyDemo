@@ -25,3 +25,5 @@
 /Users/inmetadeveloper/Downloads/PollyDemo/PollyDemo.Todo/obj/Debug/net6.0/PollyDemo.Todo.pdb
 /Users/inmetadeveloper/Downloads/PollyDemo/PollyDemo.Todo/obj/Debug/net6.0/PollyDemo.Todo.genruntimeconfig.cache
 /Users/inmetadeveloper/Downloads/PollyDemo/PollyDemo.Todo/obj/Debug/net6.0/ref/PollyDemo.Todo.dll
+/Users/inmetadeveloper/Downloads/PollyDemo/PollyDemo.Todo/bin/Debug/net6.0/Ardalis.GuardClauses.dll
+/Users/inmetadeveloper/Downloads/PollyDemo/PollyDemo.Todo/bin/Debug/net6.0/JetBrains.Annotations.dll

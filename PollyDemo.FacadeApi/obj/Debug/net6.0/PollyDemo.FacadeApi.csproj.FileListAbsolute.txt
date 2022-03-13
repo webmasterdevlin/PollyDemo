@@ -28,3 +28,5 @@
 /Users/inmetadeveloper/Downloads/PollyDemo/PollyDemo.FacadeApi/obj/Debug/net6.0/PollyDemo.FacadeApi.pdb
 /Users/inmetadeveloper/Downloads/PollyDemo/PollyDemo.FacadeApi/obj/Debug/net6.0/PollyDemo.FacadeApi.genruntimeconfig.cache
 /Users/inmetadeveloper/Downloads/PollyDemo/PollyDemo.FacadeApi/obj/Debug/net6.0/ref/PollyDemo.FacadeApi.dll
+/Users/inmetadeveloper/Downloads/PollyDemo/PollyDemo.FacadeApi/bin/Debug/net6.0/Ardalis.GuardClauses.dll
+/Users/inmetadeveloper/Downloads/PollyDemo/PollyDemo.FacadeApi/bin/Debug/net6.0/JetBrains.Annotations.dll
