@@ -3,8 +3,8 @@ using PollyDemo.FacadeApi.Policies;
 
 namespace PollyDemo.FacadeApi.Controllers;
 
-[Route("api/facade/todos")]
 [ApiController]
+[Route("api/facade/todos")]
 public class TodoFacadeController : ControllerBase
     {
     private readonly ClientPolicy _clientPolicy;
@@ -17,7 +17,7 @@ public class TodoFacadeController : ControllerBase
     }
     
     [HttpGet("{id:int}")]
-    public async Task<ActionResult> GoTodo(int id)
+    public async Task<ActionResult> GetTodoById(int id)
     {
         var client = _clientFactory.CreateClient();
         
@@ -26,11 +26,11 @@ public class TodoFacadeController : ControllerBase
 
         if(response.IsSuccessStatusCode)
         {
-            Console.WriteLine("--> TodoService returned a SUCCESS");
+            Console.WriteLine("--> FacadeApi RECEIVED a SUCCESS");
             return Ok();
         }
 
-        Console.WriteLine("--> TodoService returned a FAILURE");
+        Console.WriteLine("--> FacadeApi RECEIVED a FAILURE");
         return StatusCode(StatusCodes.Status500InternalServerError);
     }
 }
