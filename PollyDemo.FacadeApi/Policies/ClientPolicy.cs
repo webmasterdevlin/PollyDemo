@@ -16,11 +16,11 @@ public class ClientPolicy
                 res => !res.IsSuccessStatusCode)
             .RetryAsync(10);
 
-        
-        
+
+
         LinearHttpRetry = Policy.HandleResult<HttpResponseMessage>(
                 res => !res.IsSuccessStatusCode)
-            .WaitAndRetryAsync(5, retryAttempt => TimeSpan.FromSeconds(3), (httpResponseMessage, retryCount, context) =>
+            .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(3), (httpResponseMessage, retryCount, context) =>
             {
                 if (context.Contains("User-Agent or Host here"))
                 {
@@ -28,18 +28,22 @@ public class ClientPolicy
                 }
             });
 
-        
-        
+
+
         // retries exponentially increase the waiting time up to a certain threshold
         // not overwhelmed with requests hitting at the same time when it comes back up
         ExponentialHttpRetry = Policy.HandleResult<HttpResponseMessage>(
-                res =>  IsInKnownServerErrors(res.StatusCode))
-            .WaitAndRetryAsync(5, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));            
+                res => IsInKnownServerErrors(res.StatusCode))
+            .WaitAndRetryAsync(5, retryAttempt =>
+            {
+                Console.WriteLine($"--> Retry Attempt {retryAttempt}");
+                return TimeSpan.FromSeconds(Math.Pow(2, retryAttempt));
+            });
     }
 
     private bool IsInKnownServerErrors(HttpStatusCode returnedStatusCode)
     {
-       return new List<HttpStatusCode>
+        return new List<HttpStatusCode>
         {
             HttpStatusCode.InternalServerError,
             HttpStatusCode.BadGateway,
