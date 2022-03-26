@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using Microsoft.AspNetCore.Mvc;
+using Polly.CircuitBreaker;
 using PollyDemo.FacadeApi.Policies;
 
 namespace PollyDemo.FacadeApi.Controllers;
@@ -20,12 +21,19 @@ public class TodoFacadeController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult> GetTodoById(int id)
     {
+        if (_clientPolicy.CircuitBreakerPolicy.CircuitState == CircuitState.Open)
+        {
+            Console.WriteLine("--> CircuitState is OPEN");
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+        
         Guard.Against.OutOfRange(id, nameof(id), 1, 100, "Only 1 to 100 are accepted");
-
+        
         var client = _clientFactory.CreateClient();
 
-        var response = await _clientPolicy.ExponentialHttpRetry.ExecuteAsync(()
-            => client.GetAsync($"https://localhost:7211/api/todos/{id}"));
+        var response = await _clientPolicy.CircuitBreakerPolicy.ExecuteAsync(
+            () => _clientPolicy.LinearHttpRetry.ExecuteAsync(
+                () => client.GetAsync($"https://localhost:7211/api/todos/{id}")));
 
         if (response.IsSuccessStatusCode)
         {
