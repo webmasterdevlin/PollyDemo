@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using Microsoft.AspNetCore.Mvc;
+using Polly;
 using Polly.CircuitBreaker;
 using PollyDemo.FacadeApi.Policies;
 
@@ -31,9 +32,10 @@ public class TodoFacadeController : ControllerBase
         
         var client = _clientFactory.CreateClient();
 
-        var response = await _clientPolicy.CircuitBreakerPolicy.ExecuteAsync(
-            () => _clientPolicy.LinearHttpRetry.ExecuteAsync(
-                () => client.GetAsync($"https://localhost:7211/api/todos/{id}")));
+        var response = await Policy.WrapAsync(
+            _clientPolicy.CircuitBreakerPolicy,
+                          _clientPolicy.LinearHttpRetry
+                        ).ExecuteAsync(() => client.GetAsync($"https://localhost:7211/api/todos/{id}"));
 
         if (response.IsSuccessStatusCode)
         {
