@@ -21,6 +21,10 @@ public class TodoController: ControllerBase
         }
         
         Console.WriteLine("--> TodoService Returned 200 OK");
-        return Ok();
+        return Ok(new
+        {
+            Id = id,
+            Activity= "eat"
+        });
     }
 }
