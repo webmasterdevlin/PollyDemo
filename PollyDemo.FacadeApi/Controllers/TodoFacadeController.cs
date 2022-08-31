@@ -30,7 +30,8 @@ public class TodoFacadeController : ControllerBase
         if (response.IsSuccessStatusCode)
         {
             Console.WriteLine("--> FacadeApi RECEIVED a SUCCESS");
-            return Ok();
+            var data = await response.Content.ReadAsStreamAsync();
+            return new OkObjectResult(data);
         }
 
         Console.WriteLine("--> FacadeApi RECEIVED a FAILURE");
