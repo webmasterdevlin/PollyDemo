@@ -1,10 +1,11 @@
+using Polly;
+using Polly.Extensions.Http;
 using PollyDemo.FacadeApi.Policies;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddHttpClient();
-builder.Services.AddSingleton(new ClientPolicy());
+builder.Services.AddYourClientPolicy();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

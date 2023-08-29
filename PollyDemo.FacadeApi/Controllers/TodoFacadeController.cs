@@ -8,12 +8,10 @@ namespace PollyDemo.FacadeApi.Controllers;
 [Route("api/facade/todos")]
 public class TodoFacadeController : ControllerBase
 {
-    private readonly ClientPolicy _clientPolicy;
     private readonly IHttpClientFactory _clientFactory;
 
-    public TodoFacadeController(ClientPolicy clientPolicy, IHttpClientFactory clientFactory)
+    public TodoFacadeController(IHttpClientFactory clientFactory)
     {
-        _clientPolicy = clientPolicy;
         _clientFactory = clientFactory;
     }
 
@@ -21,20 +19,26 @@ public class TodoFacadeController : ControllerBase
     public async Task<ActionResult> GetTodoById(int id)
     {
         Guard.Against.OutOfRange(id, nameof(id), 1, 100, "Only 1 to 100 are accepted");
+        
+        var client = _clientFactory.CreateClient("YourClient");
 
-        var client = _clientFactory.CreateClient();
-
-        var response = await _clientPolicy.ExponentialHttpRetry.ExecuteAsync(()
-            => client.GetAsync($"https://localhost:7211/api/todos/{id}"));
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            Console.WriteLine("--> FacadeApi RECEIVED a SUCCESS");
-            var data = await response.Content.ReadAsStreamAsync();
-            return new OkObjectResult(data);
-        }
+            var response = await client.GetAsync($"https://localhost:7211/api/todos/{id}");
 
-        Console.WriteLine("--> FacadeApi RECEIVED a FAILURE");
-        return StatusCode(StatusCodes.Status500InternalServerError);
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("--> FacadeApi RECEIVED a SUCCESS");
+                var data = await response.Content.ReadAsStreamAsync();
+                return new OkObjectResult(data);
+            }
+
+            Console.WriteLine("--> FacadeApi RECEIVED a FAILURE");
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(503, "Circuit Breaker Opened");
+        }
     }
 }
