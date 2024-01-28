@@ -1,5 +1,3 @@
-using Polly;
-using Polly.Extensions.Http;
 using PollyDemo.FacadeApi.Policies;
 
 var builder = WebApplication.CreateBuilder(args);
