@@ -27,7 +27,7 @@ public class TodoFacadeController(IHttpClientFactory clientFactory) : Controller
 
         try
         {
-            var response = await client.GetAsync($"https://localhost:7211/api/todos/{id}");
+            var response = await client.GetAsync($"http://localhost:5130/api/todos/{id}");
 
             if (response.IsSuccessStatusCode)
             {
