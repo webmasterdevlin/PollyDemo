@@ -1,5 +1,7 @@
+using System.Net;
 using Ardalis.GuardClauses;
 using Microsoft.AspNetCore.Mvc;
+using Polly.Registry;
 
 namespace PollyDemo.FacadeApi.Controllers;
 
@@ -9,8 +11,17 @@ namespace PollyDemo.FacadeApi.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/facade/todos")]
-public class TodoFacadeController(IHttpClientFactory clientFactory) : ControllerBase
+public class TodoFacadeController : ControllerBase
 {
+    private readonly IHttpClientFactory _clientFactory;
+    private readonly ResiliencePipelineProvider<string> _pipelineProvider;
+
+    public TodoFacadeController(IHttpClientFactory clientFactory,
+        ResiliencePipelineProvider<string> pipelineProvider)
+    {
+        _clientFactory = clientFactory;
+        _pipelineProvider = pipelineProvider;
+    }
     /// <summary>
     /// Retrieves a "Todo" item by its ID, interacting with a backend API.
     /// This method checks the validity of the provided ID and uses Polly policies (retry and circuit breaker) 
@@ -23,11 +34,17 @@ public class TodoFacadeController(IHttpClientFactory clientFactory) : Controller
     {
         Guard.Against.OutOfRange(id, nameof(id), 1, 100, "Only 1 to 100 are accepted");
         
-        var client = clientFactory.CreateClient("YourClient");
+        var client = _clientFactory.CreateClient("YourClient");
 
         try
         {
-            var response = await client.GetAsync($"http://localhost:5130/api/todos/{id}");
+            var pipeline = _pipelineProvider.GetPipeline("default");
+            // var response = await client.GetAsync($"http://localhost:5130/api/todos/{id}");
+
+            var url = $"http://localhost:5130/api/todos/{id}";
+            
+            var response = await pipeline.ExecuteAsync(
+                async ct => await client.GetAsync(url, ct));
 
             if (response.IsSuccessStatusCode)
             {
