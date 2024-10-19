@@ -2,7 +2,7 @@ using PollyDemo.FacadeApi.Policies;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// HTTP Polly
 builder.Services.AddYourClientPolicy();
 
 builder.Services.AddControllers();
