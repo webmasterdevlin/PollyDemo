@@ -7,12 +7,11 @@ public static class YourClientResilienceDI
    public static IServiceCollection AddYourClientResilience(this IServiceCollection services)
     {
         services.AddHttpClient("YourClient")
-            .AddStandardResilienceHandler();
-        
-        services.AddResiliencePipeline("default", builder =>
+            .AddResilienceHandler("default", builder =>
         {
-            builder.AddRetry(ResiliencePolicyRegistry.GetRetryStrategyOptions());
-            builder.AddCircuitBreaker(ResiliencePolicyRegistry.GetCircuitBreakerStrategyOptions());
+            builder.AddRetry(ResiliencePolicyRegistry.GetHttpRetryStrategyOptions());
+            builder.AddCircuitBreaker(ResiliencePolicyRegistry.GetHttpCircuitBreakerStrategyOptions());
+            builder.AddTimeout(ResiliencePolicyRegistry.GetHttpTimeoutStrategyOptions());
         });
         
         return services;

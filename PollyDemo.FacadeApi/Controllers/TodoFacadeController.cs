@@ -1,14 +1,12 @@
 using Ardalis.GuardClauses;
 using Microsoft.AspNetCore.Mvc;
-using Polly.Registry;
 
 namespace PollyDemo.FacadeApi.Controllers;
 
 [ApiController]
 [Route("api/facade/todos")]
 public class TodoFacadeController(
-    IHttpClientFactory clientFactory,
-    ResiliencePipelineProvider<string> pipelineProvider)
+    IHttpClientFactory clientFactory)
     : ControllerBase
 {
     [HttpGet("{id:int}")]
@@ -20,12 +18,12 @@ public class TodoFacadeController(
 
         try
         {
-            var pipeline = pipelineProvider.GetPipeline("default");
+            var response = await client.GetAsync($"http://localhost:5130/api/todos/{id}");
 
             var url = $"http://localhost:5130/api/todos/{id}";
             
-            var response = await pipeline.ExecuteAsync(
-                async ct => await client.GetAsync(url, ct));
+            // var response = await pipeline.ExecuteAsync(
+            //     async ct => await client.GetAsync(url, ct));
 
             if (response.IsSuccessStatusCode)
             {
