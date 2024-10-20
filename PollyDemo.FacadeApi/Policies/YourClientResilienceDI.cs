@@ -1,12 +1,10 @@
-using Polly;
-
 namespace PollyDemo.FacadeApi.Policies;
 
 public static class YourClientResilienceDI
 {
    public static IServiceCollection AddYourClientResilience(this IServiceCollection services)
     {
-        services.AddHttpClient("YourClient")
+        services.AddHttpClient("todo_api")
             .AddStandardResilienceHandler(configure =>
             {
                 configure.Retry = ResiliencePolicyRegistry.GetHttpRetryStrategyOptions();

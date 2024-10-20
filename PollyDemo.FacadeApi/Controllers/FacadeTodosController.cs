@@ -5,7 +5,7 @@ namespace PollyDemo.FacadeApi.Controllers;
 
 [ApiController]
 [Route("api/facade/todos")]
-public class TodoFacadeController(
+public class FacadeTodosController(
     IHttpClientFactory clientFactory)
     : ControllerBase
 {
@@ -14,16 +14,11 @@ public class TodoFacadeController(
     {
         Guard.Against.OutOfRange(id, nameof(id), 1, 100, "Only 1 to 100 are accepted");
         
-        var client = clientFactory.CreateClient("YourClient");
+        var client = clientFactory.CreateClient("todo_api");
 
         try
         {
             var response = await client.GetAsync($"http://localhost:5130/api/todos/{id}");
-
-            var url = $"http://localhost:5130/api/todos/{id}";
-            
-            // var response = await pipeline.ExecuteAsync(
-            //     async ct => await client.GetAsync(url, ct));
 
             if (response.IsSuccessStatusCode)
             {
