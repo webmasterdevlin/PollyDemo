@@ -1,7 +1,3 @@
-using Microsoft.Extensions.Http.Resilience;
-using Polly;
-using Polly.CircuitBreaker;
-using Polly.Retry;
 using PollyDemo.FacadeApi.Policies;
 
 var builder = WebApplication.CreateBuilder(args);
