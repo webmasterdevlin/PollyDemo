@@ -4,82 +4,131 @@ using Polly;
 
 namespace PollyDemo.FacadeApi.Policies
 {
+    /// <summary>
+    /// Provides methods to configure resilience policies for HTTP clients.
+    /// </summary>
     public static class ResiliencePolicyRegistry
     {
+        /// <summary>
+        /// Creates and returns the HTTP retry strategy options.
+        /// Configures a retry policy with exponential backoff and jitter to handle transient failures.
+        /// </summary>
+        /// <returns>A configured <see cref="HttpRetryStrategyOptions"/> instance.</returns>
         public static HttpRetryStrategyOptions GetHttpRetryStrategyOptions()
         {
             return new HttpRetryStrategyOptions
             {
-                MaxRetryAttempts = 3, // Best practice is to limit retries to 3 attempts to avoid excessive load
+                // The maximum number of retry attempts before failing.
+                // Limiting retries prevents excessive load and potential cascading failures.
+                MaxRetryAttempts = 3,
 
-                Delay = TimeSpan.FromSeconds(2), // Start with a small initial delay
+                // The initial delay before the first retry attempt.
+                // Starting with a small delay improves responsiveness.
+                Delay = TimeSpan.FromSeconds(2),
 
-                BackoffType = DelayBackoffType.Exponential, // Exponential backoff to increase delays between retries
+                // Specifies the backoff strategy to use for calculating the delay between retries.
+                // Exponential backoff increases the delay exponentially after each attempt.
+                BackoffType = DelayBackoffType.Exponential,
 
-                UseJitter = true, // Use jitter to prevent retry storms in high-load scenarios
-                
-                OnRetry = (ex) =>
+                // Indicates whether to add a random jitter to the delay between retries.
+                // Jitter helps prevent retry storms by randomizing retry intervals.
+                UseJitter = true,
+
+                // Action to perform on each retry attempt.
+                // Useful for logging retry attempts or implementing custom logic.
+                OnRetry = args =>
                 {
-                    // Log the retry attempt number and calculate the delay using exponential backoff.
-                    Console.WriteLine($"--> Retry Attempt {ex.AttemptNumber}");
+                    // Log the retry attempt number.
+                    Console.WriteLine($"--> Retry Attempt {args.AttemptNumber}");
                     return ValueTask.CompletedTask;
                 },
 
+                // Defines the conditions under which retries should be attempted.
                 ShouldHandle = new PredicateBuilder<HttpResponseMessage>()
-                    .Handle<HttpRequestException>() // Handle network-related exceptions
+                    // Handle network-related exceptions like timeouts, connection failures, etc.
+                    .Handle<HttpRequestException>()
+                    // Handle specific HTTP status codes indicating transient failures.
                     .HandleResult(response =>
-                        (int)response.StatusCode >= 500 || // Handle server errors (5xx)
-                        response.StatusCode == HttpStatusCode.RequestTimeout || // Handle request timeouts
-                        response.StatusCode == HttpStatusCode.TooManyRequests) // Handle rate limiting (429)
+                        (int)response.StatusCode >= 500 ||          // Server errors (HTTP 5xx)
+                        response.StatusCode == HttpStatusCode.RequestTimeout ||     // Request timeout (HTTP 408)
+                        response.StatusCode == HttpStatusCode.TooManyRequests)      // Too many requests (HTTP 429)
             };
         }
 
+        /// <summary>
+        /// Creates and returns the HTTP circuit breaker strategy options.
+        /// Configures a circuit breaker to temporarily stop sending requests to an unhealthy service.
+        /// </summary>
+        /// <returns>A configured <see cref="HttpCircuitBreakerStrategyOptions"/> instance.</returns>
         public static HttpCircuitBreakerStrategyOptions GetHttpCircuitBreakerStrategyOptions()
         {
             return new HttpCircuitBreakerStrategyOptions
             {
-                SamplingDuration = TimeSpan.FromSeconds(30), // Evaluate over a 30-second window
+                // The time window over which failure rates are evaluated.
+                // A longer sampling duration provides a more accurate picture of service health.
+                SamplingDuration = TimeSpan.FromSeconds(30),
 
-                FailureRatio = 0.5, // Open circuit if 50% or more requests fail
+                // The failure rate threshold at which the circuit breaker will open.
+                // A value of 0.5 means the circuit will open if 50% or more requests fail.
+                FailureRatio = 0.5,
 
-                MinimumThroughput = 10, // Require at least 10 requests before evaluation
+                // The minimum number of requests required before the failure ratio is evaluated.
+                // Prevents the circuit breaker from opening due to insufficient data.
+                MinimumThroughput = 10,
 
-                BreakDuration = TimeSpan.FromSeconds(60), // Keep circuit open for 60 seconds once tripped
+                // The duration the circuit breaker remains open before transitioning to half-open state.
+                BreakDuration = TimeSpan.FromSeconds(60),
 
-                OnOpened = ex =>
+                // Action to perform when the circuit breaker opens.
+                // Useful for logging or triggering alerts.
+                OnOpened = args =>
                 {
-                    // Log when the circuit breaker is triggered and opened.
+                    // Log that the circuit breaker has opened.
                     Console.WriteLine("--> Circuit Breaker Opened");
                     return ValueTask.CompletedTask;
                 },
-                
-                OnClosed = ex =>
+
+                // Action to perform when the circuit breaker closes.
+                // Useful for logging recovery or resetting state.
+                OnClosed = args =>
                 {
-                    // Log when the circuit breaker is reset and closed.
+                    // Log that the circuit breaker has reset.
                     Console.WriteLine("--> Circuit Breaker Reset");
                     return ValueTask.CompletedTask;
                 },
-                
+
+                // Defines the conditions that are considered failures for the circuit breaker.
                 ShouldHandle = new PredicateBuilder<HttpResponseMessage>()
-                    .Handle<HttpRequestException>() // Handle network-related exceptions
+                    // Handle network-related exceptions.
+                    .Handle<HttpRequestException>()
+                    // Handle specific HTTP status codes indicating failures.
                     .HandleResult(response =>
-                        (int)response.StatusCode >= 500 || // Handle server errors (5xx)
-                        response.StatusCode == HttpStatusCode.RequestTimeout || // Handle request timeouts
-                        response.StatusCode == HttpStatusCode.TooManyRequests) // Handle rate limiting (429)
+                        (int)response.StatusCode >= 500 ||          // Server errors (HTTP 5xx)
+                        response.StatusCode == HttpStatusCode.RequestTimeout ||     // Request timeout (HTTP 408)
+                        response.StatusCode == HttpStatusCode.TooManyRequests)      // Too many requests (HTTP 429)
             };
         }
 
+        /// <summary>
+        /// Creates and returns the HTTP timeout strategy options.
+        /// Configures a timeout policy to cancel requests that exceed a specified duration.
+        /// </summary>
+        /// <returns>A configured <see cref="HttpTimeoutStrategyOptions"/> instance.</returns>
         public static HttpTimeoutStrategyOptions GetHttpTimeoutStrategyOptions()
         {
             return new HttpTimeoutStrategyOptions
             {
-                Timeout = TimeSpan.FromSeconds(15), // Set a reasonable timeout duration
+                // The maximum duration to allow for an HTTP request before timing out.
+                // A reasonable timeout prevents hanging requests and improves application responsiveness.
+                Timeout = TimeSpan.FromSeconds(15),
 
-                // Optional: Add an on-timeout event to log or handle timeouts
+                // Action to perform when a timeout occurs.
+                // Useful for logging timeouts or performing cleanup.
                 OnTimeout = args =>
                 {
+                    // Log that the request has timed out.
                     Console.WriteLine($"--> Request timed out after {args.Timeout.TotalSeconds} seconds.");
-                    return ValueTask.CompletedTask; // Return a completed ValueTask
+                    return ValueTask.CompletedTask;
                 }
             };
         }
